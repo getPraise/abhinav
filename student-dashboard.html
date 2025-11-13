@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Dashboard - Attendify</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>Attendify</h2>
+        <p>Student Portal</p>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="nav-item active-nav" href="#" id="dashboardNav">Dashboard</a>
+        <a class="nav-item" href="#" id="applyLeaveBtn">Apply Leave</a>
+        <a class="nav-item" href="#" id="myApplicationsNav">My Applications</a>
+        <!-- <a class="nav-item" href="#" id="settingsNav">Settings</a> -->
+        <a class="nav-item logout" href="login.html" id="logoutBtn">Logout</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="dashboard-header" style="position: relative;">
+        <h1 id="welcomeMessage">Welcome, Student Name</h1>
+        <div class="user-profile" style="position: relative; cursor: pointer;">
+          <span id="profileName">Student Profile</span>
+          <div class="profile-icon" id="profileIcon">S</div>
+          <div id="profileDropdown" class="profile-dropdown" style="display: none;">
+            <form id="profileForm">
+              <h3>Profile Information</h3>
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" name="fullName" required />
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required />
+              <label for="department">Department</label>
+              <input type="text" id="department" name="department" disabled />
+              <label for="year">Year</label>
+              <input type="number" id="year" name="year" disabled />
+              <button type="submit">Update Profile</button>
+            </form>
+            <hr />
+            <form id="changePasswordForm">
+              <h3>Change Password</h3>
+              <label for="currentPassword">Current Password</label>
+              <input type="password" id="currentPassword" name="currentPassword" required />
+              <label for="newPassword">New Password</label>
+              <input type="password" id="newPassword" name="newPassword" required />
+              <label for="confirmPassword">Confirm New Password</label>
+              <input type="password" id="confirmPassword" name="confirmPassword" required />
+              <button type="submit">Change Password</button>
+            </form>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Stats Section -->
+      <div class="stats-grid" id="dashboardSection">
+        <div class="stat-card">
+          <h3>Total Applications</h3>
+          <p class="stat-number" id="totalApplications">12</p>
+        </div>
+        <div class="stat-card approved">
+          <h3>Approved</h3>
+          <p class="stat-number" id="approvedApplications">8</p>
+        </div>
+        <div class="stat-card pending">
+          <h3>Pending</h3>
+          <p class="stat-number" id="pendingApplications">3</p>
+        </div>
+        <div class="stat-card rejected">
+          <h3>Rejected</h3>
+          <p class="stat-number" id="rejectedApplications">1</p>
+        </div>
+      </div>
+
+      <!-- Apply Leave Section -->
+      <div class="content-section" id="applyLeaveSection">
+        <h2>Apply for Leave</h2>
+        <form class="leave-form" id="leaveForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="departmentSelect">Department</label>
+              <select id="departmentSelect" required>
+                <option value="">Select Department</option>
+                <option value="cse">Computer Science Engineering</option>
+                <option value="ece">Electronics Engineering</option>
+                <option value="mech">Mechanical Engineering</option>
+                <option value="civil">Civil Engineering</option>
+                <option value="eee">Electrical Engineering</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="yearSelect">Year of Student</label>
+              <select id="yearSelect" required>
+                <option value="">Select Year</option>
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="rollNumber">Roll Number</label>
+              <input type="text" id="rollNumber" placeholder="Enter your roll number" required />
+            </div>
+            <div class="form-group">
+              <label for="leaveType">Leave Type</label>
+              <select id="leaveType" required>
+                <option value="">Select Leave Type</option>
+                <option value="sick">Sick Leave</option>
+                <option value="casual">Casual Leave</option>
+                <option value="emergency">Emergency Leave</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="startDate">Start Date</label>
+              <input type="date" id="startDate" required />
+            </div>
+            <div class="form-group">
+              <label for="endDate">End Date</label>
+              <input type="date" id="endDate" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="document">Upload Document</label>
+              <input type="file" id="document" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="reason">Reason</label>
+            <textarea id="reason" rows="4" placeholder="Enter reason for leave" required></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Submit Application</button>
+        </form>
+      </div>
+
+      <!-- Recent Applications Section -->
+      <div class="content-section" id="applicationsSection">
+        <h2>Recent Applications</h2>
+        <table class="applications-table">
+          <thead>
+            <tr>
+              <th>Application ID</th>
+              <th>Leave Type</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="applicationsTableBody">
+            <tr>
+              <td>#LA001</td>
+              <td>Sick Leave</td>
+              <td>2025-11-10</td>
+              <td>2025-11-12</td>
+              <td><span class="status-badge pending">Pending</span></td>
+            </tr>
+            <tr>
+              <td>#LA002</td>
+              <td>Casual Leave</td>
+              <td>2025-11-01</td>
+              <td>2025-11-02</td>
+              <td><span class="status-badge approved">Approved</span></td>
+            </tr>
+            <tr>
+              <td>#LA003</td>
+              <td>Emergency Leave</td>
+              <td>2025-10-25</td>
+              <td>2025-10-26</td>
+              <td><span class="status-badge rejected">Rejected</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Sidebar navigation elements
+    const dashboardNav = document.getElementById('dashboardNav');
+    const applyLeaveBtn = document.getElementById('applyLeaveBtn');
+    const myApplicationsNav = document.getElementById('myApplicationsNav');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // Section elements for scrolling
+    const dashboardSection = document.getElementById('dashboardSection');
+    const applyLeaveSection = document.getElementById('applyLeaveSection');
+    const applicationsSection = document.getElementById('applicationsSection');
+
+    // Function to set active class on sidebar nav items
+    function setActiveNav(activeItem) {
+      document.querySelectorAll('.sidebar-nav .nav-item').forEach(nav => {
+        nav.classList.remove('active-nav');
+      });
+      activeItem.classList.add('active-nav');
+    }
+
+    // Dashboard: scroll to stats and highlight button
+    dashboardNav.addEventListener('click', e => {
+      e.preventDefault();
+      dashboardSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setActiveNav(dashboardNav);
+    });
+
+    // Apply Leave: scroll to form and highlight button
+    applyLeaveBtn.addEventListener('click', e => {
+      e.preventDefault();
+      applyLeaveSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      applyLeaveSection.style.transition = 'background-color 0.5s ease';
+      applyLeaveSection.style.backgroundColor = '#fff9e6';
+      setTimeout(() => {
+        applyLeaveSection.style.backgroundColor = '';
+      }, 1500);
+      setActiveNav(applyLeaveBtn);
+    });
+
+    // My Applications: scroll to applications table and highlight button
+    myApplicationsNav.addEventListener('click', e => {
+      e.preventDefault();
+      applicationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setActiveNav(myApplicationsNav);
+    });
+
+    // Profile dropdown
+    const profileIcon = document.getElementById('profileIcon');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileForm = document.getElementById('profileForm');
+    const changePasswordForm = document.getElementById('changePasswordForm');
+
+    profileIcon.addEventListener('click', () => {
+      if (profileDropdown.style.display === 'none' || profileDropdown.style.display === '') {
+        profileDropdown.style.display = 'block';
+        profileForm.fullName.value = localStorage.getItem('fullName') || 'Student Name';
+        profileForm.email.value = localStorage.getItem('email') || 'student@example.com';
+        profileForm.department.value = localStorage.getItem('department') || 'CSE';
+        profileForm.year.value = localStorage.getItem('year') || '3';
+      } else {
+        profileDropdown.style.display = 'none';
+      }
+    });
+
+    profileForm.addEventListener('submit', e => {
+      e.preventDefault();
+      localStorage.setItem('fullName', profileForm.fullName.value);
+      localStorage.setItem('email', profileForm.email.value);
+      alert('Profile updated (mock)');
+      profileDropdown.style.display = 'none';
+    });
+
+    changePasswordForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const currentPass = changePasswordForm.currentPassword.value;
+      const newPass = changePasswordForm.newPassword.value;
+      const confirmPass = changePasswordForm.confirmPassword.value;
+      if (newPass !== confirmPass) {
+        alert('New passwords do not match!');
+        return;
+      }
+      alert('Password changed successfully (mock)');
+      changePasswordForm.reset();
+      profileDropdown.style.display = 'none';
+    });
+
+    // FIXED: Get userName from localStorage (was 'fullName' before)
+    const userName = localStorage.getItem('userName') || 'Student Name';
+    document.getElementById('welcomeMessage').textContent = 'Welcome, ' + userName;
+    document.getElementById('profileName').textContent = userName;
+    document.getElementById('profileIcon').textContent = userName.charAt(0).toUpperCase();
+
+    // Logout
+    logoutBtn.addEventListener('click', e => {
+      localStorage.clear();
+    });
+  </script>
+</body>
+</html>
