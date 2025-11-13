@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Attendify - Login</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body class="login-body">
+    <div class="login-container">
+        <div class="login-box">
+            <div class="logo-section">
+                <h1>Attendify</h1>
+                <p>Leave Management System</p>
+            </div>
+
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="role">Login As</label>
+                    <select id="role" required>
+                        <option value="">Select Role</option>
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="hod">HOD</option>
+                    </select>
+                </div>
+
+                <!-- Student and Teacher fields -->
+                <div id="studentTeacherFields" style="display:none;">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" placeholder="Enter your name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Enter your email" />
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordST">Password</label>
+                        <input type="password" id="passwordST" placeholder="Enter your password" />
+                    </div>
+                </div>
+
+                <!-- HOD fields -->
+                <div id="hodFields" style="display:none;">
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <select id="department">
+                            <option value="">Select Department</option>
+                            <option value="CSE">CSE</option>
+                            <option value="AIML">AIML</option>
+                            <option value="CSIT">CSIT</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="userId">User ID</label>
+                        <input type="text" id="userId" placeholder="Enter your user ID" />
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordHod">Password</label>
+                        <input type="password" id="passwordHod" placeholder="Enter your password" />
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn">Login</button>
+
+                <div class="forgot-password">
+                    <a href="#">Forgot Password?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+const roleSelect = document.getElementById('role');
+const studentTeacherFields = document.getElementById('studentTeacherFields');
+const hodFields = document.getElementById('hodFields');
+
+roleSelect.addEventListener('change', () => {
+    const selectedRole = roleSelect.value;
+    if (selectedRole === 'student' || selectedRole === 'teacher') {
+        studentTeacherFields.style.display = 'block';
+        hodFields.style.display = 'none';
+    } else if (selectedRole === 'hod') {
+        hodFields.style.display = 'block';
+        studentTeacherFields.style.display = 'none';
+    } else {
+        studentTeacherFields.style.display = 'none';
+        hodFields.style.display = 'none';
+    }
+});
+
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const role = roleSelect.value;
+
+    if (role === 'student' || role === 'teacher') {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('passwordST').value;
+        if (!name || !email || !password) {
+            alert('Please fill all fields');
+            return;
+        }
+        localStorage.setItem('userName', name);
+
+        if (role === 'student') {
+            window.location.href = 'student-dashboard.html';
+        } else {
+            window.location.href = 'teacher-dashboard.html';
+        }
+    } else if (role === 'hod') {
+        const department = document.getElementById('department').value;
+        const userId = document.getElementById('userId').value.trim();
+        const password = document.getElementById('passwordHod').value;
+        if (!department || !userId || !password) {
+            alert('Please fill all fields');
+            return;
+        }
+        localStorage.setItem('hodDepartment', department);
+        localStorage.setItem('hodUserId', userId);
+        window.location.href = 'hod-dashboard.html';
+    } else {
+        alert('Please select a role');
+    }
+});
+</script>
+</body>
+</html>
