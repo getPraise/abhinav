@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HOD Dashboard - Attendify</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Attendify</h2>
+            <p>HOD Portal</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-item active-nav" href="#" id="dashboardNav">Dashboard</a>
+            <a class="nav-item" href="#" id="pendingRequestsNav">Pending Requests</a>
+            <a class="nav-item" href="#" id="allApplicationsNav">All Applications</a>
+            <a class="nav-item" href="#" id="analyticsNav">Analytics</a>
+            <!-- <a class="nav-item" href="#">Settings</a> -->
+            <a class="nav-item logout" href="login.html" id="logoutBtn">Logout</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="dashboard-header" style="position: relative;">
+            <h1>HOD Dashboard</h1>
+            <div class="user-profile" style="position: relative; cursor: pointer;">
+                <span id="profileName">HOD - Computer Science</span>
+                <div class="profile-icon" id="profileIcon">H</div>
+                <div id="profileDropdown" class="profile-dropdown" style="display: none;">
+                    <form id="profileForm">
+                        <h3>Profile Information</h3>
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" required />
+                        <label for="department">Department</label>
+                        <input type="text" id="department" name="department" disabled />
+                        <label for="userId">User ID</label>
+                        <input type="text" id="userId" name="userId" disabled />
+                        <button type="submit">Update Profile</button>
+                    </form>
+                    <hr />
+                    <form id="changePasswordForm">
+                        <h3>Change Password</h3>
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" name="currentPassword" required />
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword" required />
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required />
+                        <button type="submit">Change Password</button>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Cards (Dashboard Section) -->
+        <div class="stats-grid" id="dashboardSection">
+            <div class="stat-card">
+                <h3>Total Requests</h3>
+                <p class="stat-number">45</p>
+            </div>
+            <div class="stat-card pending">
+                <h3>Pending Approval</h3>
+                <p class="stat-number">12</p>
+            </div>
+            <div class="stat-card approved">
+                <h3>Approved Today</h3>
+                <p class="stat-number">5</p>
+            </div>
+            <div class="stat-card rejected">
+                <h3>Rejected</h3>
+                <p class="stat-number">3</p>
+            </div>
+        </div>
+
+        <!-- Pending Leave Requests Section -->
+        <div class="content-section" id="pendingRequestsSection">
+            <h2>Pending Leave Requests</h2>
+            <div class="request-cards">
+                <!-- Request Card 1 -->
+                <div class="request-card">
+                    <div class="request-header">
+                        <div>
+                            <h3>Rajesh Kumar</h3>
+                            <p>Student ID: CS2023001</p>
+                        </div>
+                        <span class="request-type">Sick Leave</span>
+                    </div>
+                    <div class="request-details">
+                        <p><strong>Duration:</strong> Nov 10, 2025 - Nov 12, 2025 (3 days)</p>
+                        <p><strong>Reason:</strong> Medical emergency - fever and cold</p>
+                        <p><strong>Document:</strong> <a href="#">medical_certificate.pdf</a></p>
+                    </div>
+                    <div class="request-actions">
+                        <button class="approve-btn">Approve</button>
+                        <button class="reject-btn">Reject</button>
+                    </div>
+                </div>
+
+                <!-- Request Card 2 -->
+                <div class="request-card">
+                    <div class="request-header">
+                        <div>
+                            <h3>Priya Sharma</h3>
+                            <p>Student ID: CS2023015</p>
+                        </div>
+                        <span class="request-type">Casual Leave</span>
+                    </div>
+                    <div class="request-details">
+                        <p><strong>Duration:</strong> Nov 15, 2025 - Nov 16, 2025 (2 days)</p>
+                        <p><strong>Reason:</strong> Family function</p>
+                        <p><strong>Document:</strong> No document attached</p>
+                    </div>
+                    <div class="request-actions">
+                        <button class="approve-btn">Approve</button>
+                        <button class="reject-btn">Reject</button>
+                    </div>
+                </div>
+
+                <!-- Request Card 3 -->
+                <div class="request-card">
+                    <div class="request-header">
+                        <div>
+                            <h3>Dr. Amit Patel</h3>
+                            <p>Faculty ID: FAC2020008</p>
+                        </div>
+                        <span class="request-type teacher">Emergency Leave</span>
+                    </div>
+                    <div class="request-details">
+                        <p><strong>Duration:</strong> Nov 08, 2025 - Nov 09, 2025 (2 days)</p>
+                        <p><strong>Reason:</strong> Personal emergency</p>
+                        <p><strong>Document:</strong> <a href="#">emergency_proof.pdf</a></p>
+                    </div>
+                    <div class="request-actions">
+                        <button class="approve-btn">Approve</button>
+                        <button class="reject-btn">Reject</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Applications Section -->
+        <div class="content-section" id="allApplicationsSection">
+            <h2>All Leave Applications</h2>
+            <table class="applications-table">
+                <thead>
+                    <tr>
+                        <th>Application ID</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Leave Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#LA001</td>
+                        <td>Rajesh Kumar</td>
+                        <td>Student</td>
+                        <td>Sick Leave</td>
+                        <td>2025-11-10</td>
+                        <td>2025-11-12</td>
+                        <td><span class="status-badge pending">Pending</span></td>
+                    </tr>
+                    <tr>
+                        <td>#LA002</td>
+                        <td>Priya Sharma</td>
+                        <td>Student</td>
+                        <td>Casual Leave</td>
+                        <td>2025-11-15</td>
+                        <td>2025-11-16</td>
+                        <td><span class="status-badge pending">Pending</span></td>
+                    </tr>
+                    <tr>
+                        <td>#LA003</td>
+                        <td>Dr. Amit Patel</td>
+                        <td>Faculty</td>
+                        <td>Emergency Leave</td>
+                        <td>2025-11-08</td>
+                        <td>2025-11-09</td>
+                        <td><span class="status-badge pending">Pending</span></td>
+                    </tr>
+                    <tr>
+                        <td>#LA004</td>
+                        <td>Anita Desai</td>
+                        <td>Student</td>
+                        <td>Sick Leave</td>
+                        <td>2025-11-01</td>
+                        <td>2025-11-03</td>
+                        <td><span class="status-badge approved">Approved</span></td>
+                    </tr>
+                    <tr>
+                        <td>#LA005</td>
+                        <td>Ravi Singh</td>
+                        <td>Student</td>
+                        <td>Casual Leave</td>
+                        <td>2025-10-28</td>
+                        <td>2025-10-29</td>
+                        <td><span class="status-badge rejected">Rejected</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Analytics Section -->
+        <div class="content-section" id="analyticsSection">
+            <h2>Leave Statistics (This Month)</h2>
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h4>Student Leaves</h4>
+                    <p class="analytics-number">28</p>
+                    <p class="analytics-trend">↑ 15% from last month</p>
+                </div>
+                <div class="analytics-card">
+                    <h4>Faculty Leaves</h4>
+                    <p class="analytics-number">8</p>
+                    <p class="analytics-trend">↓ 5% from last month</p>
+                </div>
+                <div class="analytics-card">
+                    <h4>Approval Rate</h4>
+                    <p class="analytics-number">85%</p>
+                    <p class="analytics-trend">Consistent</p>
+                </div>
+                <div class="analytics-card">
+                    <h4>Avg. Processing Time</h4>
+                    <p class="analytics-number">2.3 hrs</p>
+                    <p class="analytics-trend">↓ 20% faster</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Sidebar navigation elements
+    const dashboardNav = document.getElementById('dashboardNav');
+    const pendingRequestsNav = document.getElementById('pendingRequestsNav');
+    const allApplicationsNav = document.getElementById('allApplicationsNav');
+    const analyticsNav = document.getElementById('analyticsNav');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // Section elements for scrolling
+    const dashboardSection = document.getElementById('dashboardSection');
+    const pendingRequestsSection = document.getElementById('pendingRequestsSection');
+    const allApplicationsSection = document.getElementById('allApplicationsSection');
+    const analyticsSection = document.getElementById('analyticsSection');
+
+    // Function to set active class on sidebar nav items
+    function setActiveNav(activeItem) {
+        document.querySelectorAll('.sidebar-nav .nav-item').forEach(nav => {
+            nav.classList.remove('active-nav');
+        });
+        activeItem.classList.add('active-nav');
+    }
+
+    // Dashboard: scroll to stats and highlight button
+    dashboardNav.addEventListener('click', e => {
+        e.preventDefault();
+        dashboardSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setActiveNav(dashboardNav);
+    });
+
+    // Pending Requests: scroll to pending requests section
+    pendingRequestsNav.addEventListener('click', e => {
+        e.preventDefault();
+        pendingRequestsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setActiveNav(pendingRequestsNav);
+    });
+
+    // All Applications: scroll to all applications table
+    allApplicationsNav.addEventListener('click', e => {
+        e.preventDefault();
+        allApplicationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setActiveNav(allApplicationsNav);
+    });
+
+    // Analytics: scroll to analytics section
+    analyticsNav.addEventListener('click', e => {
+        e.preventDefault();
+        analyticsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setActiveNav(analyticsNav);
+    });
+
+    // Profile dropdown
+    const profileIcon = document.getElementById('profileIcon');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileForm = document.getElementById('profileForm');
+    const changePasswordForm = document.getElementById('changePasswordForm');
+
+    profileIcon.addEventListener('click', () => {
+        if (profileDropdown.style.display === 'none' || profileDropdown.style.display === '') {
+            profileDropdown.style.display = 'block';
+            profileForm.fullName.value = localStorage.getItem('hodFullName') || 'HOD Name';
+            profileForm.department.value = localStorage.getItem('hodDepartment') || 'Computer Science';
+            profileForm.userId.value = localStorage.getItem('hodUserId') || 'HOD001';
+        } else {
+            profileDropdown.style.display = 'none';
+        }
+    });
+
+    profileForm.addEventListener('submit', e => {
+        e.preventDefault();
+        localStorage.setItem('hodFullName', profileForm.fullName.value);
+        alert('Profile updated (mock)');
+        profileDropdown.style.display = 'none';
+    });
+
+    changePasswordForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const currentPass = changePasswordForm.currentPassword.value;
+        const newPass = changePasswordForm.newPassword.value;
+        const confirmPass = changePasswordForm.confirmPassword.value;
+        if (newPass !== confirmPass) {
+            alert('New passwords do not match!');
+            return;
+        }
+        alert('Password changed successfully (mock)');
+        changePasswordForm.reset();
+        profileDropdown.style.display = 'none';
+    });
+
+    // Populate HOD info from localStorage
+    const hodDepartment = localStorage.getItem('hodDepartment') || 'Computer Science';
+    const hodUserId = localStorage.getItem('hodUserId') || 'H';
+    document.getElementById('profileName').textContent = 'HOD - ' + hodDepartment;
+    document.getElementById('profileIcon').textContent = hodUserId.charAt(0).toUpperCase();
+
+    // Logout
+    logoutBtn.addEventListener('click', e => {
+        localStorage.clear();
+    });
+</script>
+</body>
+</html>
