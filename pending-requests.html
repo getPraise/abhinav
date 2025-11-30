@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pending Requests - Attendify</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Attendify</h2>
+            <p>HOD Portal</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-item" href="hod-dashboard.html" id="dashboardNav">Dashboard</a>
+            <a class="nav-item" href="pending-requests.html" id="pendingNav">Pending Requests</a>
+            <a class="nav-item" href="records-analytics.html" id="recordsNav">Records & Analytics</a>
+            <a class="nav-item logout" href="login.html" id="logoutBtn">Logout</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="dashboard-header" style="position: relative;">
+            <h1>Pending Leave Requests</h1>
+            <div class="user-profile" style="position: relative; cursor: pointer;">
+                <span id="profileName">HOD - Computer Science</span>
+                <div class="profile-icon" id="profileIcon">H</div>
+                <div id="profileDropdown" class="profile-dropdown" style="display: none;">
+                    <form id="profileForm">
+                        <h3>Profile Information</h3>
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" required />
+                        <label for="department">Department</label>
+                        <input type="text" id="department" name="department" disabled />
+                        <label for="userId">User ID</label>
+                        <input type="text" id="userId" name="userId" disabled />
+                        <button type="submit">Update Profile</button>
+                    </form>
+                    <hr />
+                    <form id="changePasswordForm">
+                        <h3>Change Password</h3>
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" name="currentPassword" required />
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword" required />
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required />
+                        <button type="submit">Change Password</button>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+        <!-- Filter Section -->
+        <div class="content-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1.5rem;">
+                <h2 style="margin: 0; flex-shrink: 0;">Pending Requests</h2>
+                
+                <!-- Search Bar -->
+                <input 
+                    type="text" 
+                    id="searchBar" 
+                    placeholder="🔍 Search by name or ID" 
+                    style="flex: 1; padding: 0.7rem 1rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; outline: none; transition: border 0.3s;"
+                    onfocus="this.style.borderColor='#4f46e5'"
+                    onblur="this.style.borderColor='#e5e7eb'"
+                />
+
+                <!-- Time Filter -->
+                <div style="display: flex; align-items: center; gap: 0.8rem; flex-shrink: 0;">
+                    <label for="timeFilter" style="font-weight: 600; color: #4f46e5;">Filter by:</label>
+                    <select id="timeFilter" style="padding: 0.7rem 1rem; border: 2px solid #4f46e5; border-radius: 8px; font-size: 1rem; cursor: pointer; background-color: white;">
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="6months">Last 6 Months</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Pending Requests Cards Container -->
+            <div class="request-cards" id="requestCardsContainer">
+                <!-- Cards will be populated by JavaScript -->
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Active navigation highlighting
+    const currentPage = window.location.pathname.split('/').pop();
+    const navLinks = document.querySelectorAll('.nav-item');
+    
+    navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active-nav');
+        }
+    });
+
+    // Profile dropdown functionality
+    const profileIcon = document.getElementById('profileIcon');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileForm = document.getElementById('profileForm');
+    const changePasswordForm = document.getElementById('changePasswordForm');
+
+    profileIcon.addEventListener('click', () => {
+        if (profileDropdown.style.display === 'none' || profileDropdown.style.display === '') {
+            profileDropdown.style.display = 'block';
+            profileForm.fullName.value = localStorage.getItem('hodFullName') || 'HOD Name';
+            profileForm.department.value = localStorage.getItem('hodDepartment') || 'Computer Science';
+            profileForm.userId.value = localStorage.getItem('hodUserId') || 'HOD001';
+        } else {
+            profileDropdown.style.display = 'none';
+        }
+    });
+
+    profileForm.addEventListener('submit', e => {
+        e.preventDefault();
+        localStorage.setItem('hodFullName', profileForm.fullName.value);
+        alert('Profile updated successfully!');
+        profileDropdown.style.display = 'none';
+    });
+
+    changePasswordForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const currentPass = changePasswordForm.currentPassword.value;
+        const newPass = changePasswordForm.newPassword.value;
+        const confirmPass = changePasswordForm.confirmPassword.value;
+        
+        if (newPass !== confirmPass) {
+            alert('New passwords do not match!');
+            return;
+        }
+        alert('Password changed successfully!');
+        changePasswordForm.reset();
+        profileDropdown.style.display = 'none';
+    });
+
+    // Populate HOD info from localStorage
+    const hodDepartment = localStorage.getItem('hodDepartment') || 'Computer Science';
+    const hodUserId = localStorage.getItem('hodUserId') || 'H';
+    document.getElementById('profileName').textContent = 'HOD - ' + hodDepartment;
+    document.getElementById('profileIcon').textContent = hodUserId.charAt(0).toUpperCase();
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', e => {
+        localStorage.clear();
+    });
+
+    // ===== PENDING REQUESTS DATA =====
+    const pendingRequestsData = [
+        {
+            id: '2402300100011 (LA001)',
+            name: 'Abhinav',
+            studentId: '2402300100011',
+            type: 'Student',
+            leaveType: 'Sick Leave',
+            startDate: '2025-11-28',
+            endDate: '2025-11-29',
+            days: 2,
+            reason: 'Medical emergency - fever and cold',
+            document: 'medical_certificate.pdf',
+            appId: '#LA001'
+        },
+        {
+            id: '2402300100005 (LA002)',
+            name: 'Aanya',
+            studentId: '2402300100005',
+            type: 'Student',
+            leaveType: 'Casual Leave',
+            startDate: '2025-11-27',
+            endDate: '2025-11-28',
+            days: 2,
+            reason: 'Family function',
+            document: null,
+            appId: '#LA002'
+        },
+        {
+            id: 'FAC2020001 (TLA003)',
+            name: 'Dr. Kaustubh Shukla',
+            studentId: 'FAC2020001',
+            type: 'Faculty',
+            leaveType: 'Emergency Leave',
+            startDate: '2025-11-26',
+            endDate: '2025-11-27',
+            days: 2,
+            reason: 'Personal emergency',
+            document: 'emergency_proof.pdf',
+            appId: '#TLA003'
+        },
+        {
+            id: '2402300100012 (LA009)',
+            name: 'Abhishek',
+            studentId: '2402300100012',
+            type: 'Student',
+            leaveType: 'Medical Leave',
+            startDate: '2025-11-20',
+            endDate: '2025-11-22',
+            days: 3,
+            reason: 'Hospital appointment and recovery',
+            document: 'doctor_note.pdf',
+            appId: '#LA009'
+        },
+        {
+            id: 'FAC2020002 (TLA010)',
+            name: 'Prof. Vaishali Mogha',
+            studentId: 'FAC2020002',
+            type: 'Faculty',
+            leaveType: 'Personal Leave',
+            startDate: '2025-11-15',
+            endDate: '2025-11-16',
+            days: 2,
+            reason: 'Family event',
+            document: null,
+            appId: '#TLA010'
+        },
+        {
+            id: '2402300100013 (LA011)',
+            name: 'Abhitenjay',
+            studentId: '2402300100013',
+            type: 'Student',
+            leaveType: 'Casual Leave',
+            startDate: '2025-10-28',
+            endDate: '2025-10-29',
+            days: 2,
+            reason: 'Personal work',
+            document: null,
+            appId: '#LA011'
+        }
+    ];
+
+    // Global variable to store currently filtered data
+    let currentFilteredData = [];
+
+    // ===== DATE FILTERING LOGIC =====
+    function filterRequestsByDate(filter) {
+        const today = new Date();
+        currentFilteredData = [];
+
+        pendingRequestsData.forEach(req => {
+            const reqDate = new Date(req.startDate);
+            let showReq = false;
+
+            if (filter === 'week') {
+                const weekAgo = new Date(today);
+                weekAgo.setDate(today.getDate() - 7);
+                showReq = reqDate >= weekAgo;
+            } else if (filter === 'month') {
+                showReq = reqDate.getMonth() === today.getMonth() && reqDate.getFullYear() === today.getFullYear();
+            } else if (filter === '6months') {
+                const sixMonthsAgo = new Date(today);
+                sixMonthsAgo.setMonth(today.getMonth() - 6);
+                showReq = reqDate >= sixMonthsAgo;
+            }
+
+            if (showReq) {
+                currentFilteredData.push(req);
+            }
+        });
+
+        // Apply search filter on top of date filter
+        const searchValue = document.getElementById('searchBar').value;
+        applySearchFilter(searchValue);
+    }
+
+    // ===== SEARCH FILTER LOGIC =====
+    function applySearchFilter(searchValue) {
+        const container = document.getElementById('requestCardsContainer');
+        container.innerHTML = '';
+
+        const searchLower = searchValue.toLowerCase().trim();
+        
+        // Filter by search term
+        let displayData = currentFilteredData;
+        if (searchLower !== '') {
+            displayData = currentFilteredData.filter(req => {
+                return req.name.toLowerCase().includes(searchLower) || 
+                       req.studentId.toLowerCase().includes(searchLower);
+            });
+        }
+
+        // Display filtered cards
+        if (displayData.length === 0) {
+            container.innerHTML = '<p style="text-align:center; color:#777; padding: 3rem; font-size: 1.1rem;">No pending requests found</p>';
+        } else {
+            displayData.forEach(req => {
+                const card = document.createElement('div');
+                card.className = 'request-card';
+                
+                const typeClass = req.type === 'Faculty' ? 'teacher' : '';
+                const docLink = req.document ? <a href="#">${req.document}</a> : 'No document attached';
+                
+                card.innerHTML = `
+                    <div class="request-header">
+                        <div>
+                            <h3>${req.name}</h3>
+                            <p>${req.type} ID: ${req.studentId}</p>
+                        </div>
+                        <span class="request-type ${typeClass}">${req.leaveType}</span>
+                    </div>
+                    <div class="request-details">
+                        <p><strong>Duration:</strong> ${formatDate(req.startDate)} - ${formatDate(req.endDate)} (${req.days} days)</p>
+                        <p><strong>Reason:</strong> ${req.reason}</p>
+                        <p><strong>Document:</strong> ${docLink}</p>
+                    </div>
+                    <div class="request-actions">
+                        <button class="approve-btn" onclick="handleApprove(this, '${req.name}', '${req.appId}')">Approve</button>
+                        <button class="reject-btn" onclick="handleReject(this, '${req.name}', '${req.appId}')">Reject</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+    }
+
+    // Helper function to format dates nicely
+    function formatDate(dateStr) {
+        const date = new Date(dateStr);
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        return ${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()};
+    }
+
+    // ===== TIME FILTER DROPDOWN =====
+    const timeFilter = document.getElementById('timeFilter');
+    
+    // Load cards with default "This Week" filter on page load
+    filterRequestsByDate('week');
+
+    // Update cards when filter changes
+    timeFilter.addEventListener('change', () => {
+        filterRequestsByDate(timeFilter.value);
+    });
+
+    // ===== SEARCH BAR =====
+    const searchBar = document.getElementById('searchBar');
+    
+    // Real-time search as user types
+    searchBar.addEventListener('input', (e) => {
+        applySearchFilter(e.target.value);
+    });
+
+    // Approve/Reject handlers
+    function handleApprove(button, name, appId) {
+        if (confirm(Approve leave request for ${name} (${appId})?)) {
+            const card = button.closest('.request-card');
+            card.style.border = '2px solid #10b981';
+            card.style.opacity = '0.7';
+            button.disabled = true;
+            button.nextElementSibling.disabled = true;
+            alert(Leave request ${appId} for ${name} has been APPROVED!);
+            
+            // Remove card after 2 seconds
+            setTimeout(() => {
+                card.style.display = 'none';
+            }, 2000);
+        }
+    }
+
+    function handleReject(button, name, appId) {
+        const reason = prompt(Provide reason for rejecting ${name}'s leave request:);
+        if (reason) {
+            const card = button.closest('.request-card');
+            card.style.border = '2px solid #ef4444';
+            card.style.opacity = '0.7';
+            button.disabled = true;
+            button.previousElementSibling.disabled = true;
+            alert(Leave request ${appId} for ${name} has been REJECTED!\nReason: ${reason});
+            
+            // Remove card after 2 seconds
+            setTimeout(() => {
+                card.style.display = 'none';
+            }, 2000);
+        }
+    }
+</script>
+</body>
+</html>
