@@ -19,25 +19,25 @@
                     <label for="role">Login As</label>
                     <select id="role" required>
                         <option value="">Select Role</option>
-                        <option value="student">Student</option>
-                        <option value="teacher">Teacher</option>
                         <option value="hod">HOD</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="student">Student</option>
                     </select>
                 </div>
 
-                <!-- Student and Teacher fields -->
-                <div id="studentTeacherFields" style="display:none;">
+                <!-- Student and Faculty fields -->
+                <div id="studentFacultyFields" style="display:none;">
                     <div class="form-group">
                         <label for="name">Full Name</label>
                         <input type="text" id="name" placeholder="Enter your name" />
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="Enter your email" />
+                        <label for="userId" id="userIdLabel">Student ID</label>
+                        <input type="text" id="userIdInput" placeholder="Enter your student ID" />
                     </div>
                     <div class="form-group">
-                        <label for="passwordST">Password</label>
-                        <input type="password" id="passwordST" placeholder="Enter your password" />
+                        <label for="passwordSF">Password</label>
+                        <input type="password" id="passwordSF" placeholder="Enter your password" />
                     </div>
                 </div>
 
@@ -53,8 +53,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="userId">User ID</label>
-                        <input type="text" id="userId" placeholder="Enter your user ID" />
+                        <label for="hodUserId">User ID</label>
+                        <input type="text" id="hodUserId" placeholder="Enter your user ID" />
                     </div>
                     <div class="form-group">
                         <label for="passwordHod">Password</label>
@@ -73,19 +73,32 @@
 
 <script>
 const roleSelect = document.getElementById('role');
-const studentTeacherFields = document.getElementById('studentTeacherFields');
+const studentFacultyFields = document.getElementById('studentFacultyFields');
 const hodFields = document.getElementById('hodFields');
+const userIdLabel = document.getElementById('userIdLabel');
+const userIdInput = document.getElementById('userIdInput');
 
 roleSelect.addEventListener('change', () => {
     const selectedRole = roleSelect.value;
-    if (selectedRole === 'student' || selectedRole === 'teacher') {
-        studentTeacherFields.style.display = 'block';
+    
+    if (selectedRole === 'student') {
+        studentFacultyFields.style.display = 'block';
         hodFields.style.display = 'none';
-    } else if (selectedRole === 'hod') {
+        userIdLabel.textContent = 'Student ID';
+        userIdInput.placeholder = 'Enter your student ID';
+    } 
+    else if (selectedRole === 'faculty') {
+        studentFacultyFields.style.display = 'block';
+        hodFields.style.display = 'none';
+        userIdLabel.textContent = 'Faculty ID';
+        userIdInput.placeholder = 'Enter your faculty ID';
+    } 
+    else if (selectedRole === 'hod') {
         hodFields.style.display = 'block';
-        studentTeacherFields.style.display = 'none';
-    } else {
-        studentTeacherFields.style.display = 'none';
+        studentFacultyFields.style.display = 'none';
+    } 
+    else {
+        studentFacultyFields.style.display = 'none';
         hodFields.style.display = 'none';
     }
 });
@@ -94,33 +107,49 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const role = roleSelect.value;
 
-    if (role === 'student' || role === 'teacher') {
+    if (role === 'student') {
         const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('passwordST').value;
-        if (!name || !email || !password) {
+        const studentId = document.getElementById('userIdInput').value.trim();
+        const password = document.getElementById('passwordSF').value;
+        
+        if (!name || !studentId || !password) {
             alert('Please fill all fields');
             return;
         }
+        
         localStorage.setItem('userName', name);
-
-        if (role === 'student') {
-            window.location.href = 'student-dashboard.html';
-        } else {
-            window.location.href = 'teacher-dashboard.html';
+        localStorage.setItem('studentId', studentId);
+        window.location.href = 'student-dashboard.html';
+    } 
+    else if (role === 'faculty') {
+        const name = document.getElementById('name').value.trim();
+        const facultyId = document.getElementById('userIdInput').value.trim();
+        const password = document.getElementById('passwordSF').value;
+        
+        if (!name || !facultyId || !password) {
+            alert('Please fill all fields');
+            return;
         }
-    } else if (role === 'hod') {
+        
+        localStorage.setItem('userName', name);
+        localStorage.setItem('facultyId', facultyId);
+        window.location.href = 'teacher-dashboard.html';
+    } 
+    else if (role === 'hod') {
         const department = document.getElementById('department').value;
-        const userId = document.getElementById('userId').value.trim();
+        const userId = document.getElementById('hodUserId').value.trim();
         const password = document.getElementById('passwordHod').value;
+        
         if (!department || !userId || !password) {
             alert('Please fill all fields');
             return;
         }
+        
         localStorage.setItem('hodDepartment', department);
         localStorage.setItem('hodUserId', userId);
         window.location.href = 'hod-dashboard.html';
-    } else {
+    } 
+    else {
         alert('Please select a role');
     }
 });
