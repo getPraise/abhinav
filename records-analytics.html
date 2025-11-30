@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Records & Analytics - Attendify</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Attendify</h2>
+            <p>HOD Portal</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-item" href="hod-dashboard.html" id="dashboardNav">Dashboard</a>
+            <a class="nav-item" href="pending-requests.html" id="pendingNav">Pending Requests</a>
+            <a class="nav-item" href="records-analytics.html" id="recordsNav">Records & Analytics</a>
+            <a class="nav-item logout" href="login.html" id="logoutBtn">Logout</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="dashboard-header" style="position: relative;">
+            <h1>Records & Analytics</h1>
+            <div class="user-profile" style="position: relative; cursor: pointer;">
+                <span id="profileName">HOD - Computer Science</span>
+                <div class="profile-icon" id="profileIcon">H</div>
+                <div id="profileDropdown" class="profile-dropdown" style="display: none;">
+                    <form id="profileForm">
+                        <h3>Profile Information</h3>
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" required />
+                        <label for="department">Department</label>
+                        <input type="text" id="department" name="department" disabled />
+                        <label for="userId">User ID</label>
+                        <input type="text" id="userId" name="userId" disabled />
+                        <button type="submit">Update Profile</button>
+                    </form>
+                    <hr />
+                    <form id="changePasswordForm">
+                        <h3>Change Password</h3>
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" name="currentPassword" required />
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword" required />
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required />
+                        <button type="submit">Change Password</button>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+        <!-- Analytics Section -->
+        <div class="content-section">
+            <h2>Leave Statistics (This Month)</h2>
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h4>Student Leaves</h4>
+                    <p class="analytics-number">28</p>
+                    <p class="analytics-trend">↑ 15% from last month</p>
+                </div>
+                <div class="analytics-card">
+                    <h4>Faculty Leaves</h4>
+                    <p class="analytics-number">8</p>
+                    <p class="analytics-trend">↓ 5% from last month</p>
+                </div>
+                <div class="analytics-card">
+                    <h4>Approval Rate</h4>
+                    <p class="analytics-number">85%</p>
+                    <p class="analytics-trend">Consistent</p>
+                </div>
+                <div class="analytics-card">
+                    <h4>Avg. Processing Time</h4>
+                    <p class="analytics-number">2.3 hrs</p>
+                    <p class="analytics-trend">↓ 20% faster</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student/Teacher Summary Section -->
+        <div class="content-section">
+            <h2>Student & Teacher Records</h2>
+            
+            <!-- Two Search Bars Side by Side -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                <!-- Student Search -->
+                <div class="leave-form">
+                    <h3 style="margin-bottom: 1rem; color: #4f46e5;">Student Summary</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="summaryStudentId">Student ID</label>
+                            <input type="text" id="summaryStudentId" placeholder="Enter Student ID" />
+                        </div>
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button class="submit-btn" id="viewStudentSummaryBtn" type="button">View Summary</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teacher Search -->
+                <div class="leave-form">
+                    <h3 style="margin-bottom: 1rem; color: #7c3aed;">Teacher Summary</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="summaryTeacherId">Teacher ID</label>
+                            <input type="text" id="summaryTeacherId" placeholder="Enter Teacher ID" />
+                        </div>
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button class="submit-btn" id="viewTeacherSummaryBtn" type="button">View Summary</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Stats Grid - HIDDEN INITIALLY -->
+            <div class="stats-grid summary-stats" id="studentStatsGrid" style="display: none; margin-bottom: 2rem;">
+                <div class="stat-card">
+                    <h3>Total Leaves (Semester)</h3>
+                    <p class="stat-number" id="studentTotalLeaves">0</p>
+                </div>
+                <div class="stat-card approved">
+                    <h3>Approved</h3>
+                    <p class="stat-number" id="studentApprovedLeaves">0</p>
+                </div>
+                <div class="stat-card pending">
+                    <h3>Pending</h3>
+                    <p class="stat-number" id="studentPendingLeaves">0</p>
+                </div>
+                <div class="stat-card rejected">
+                    <h3>Rejected</h3>
+                    <p class="stat-number" id="studentRejectedLeaves">0</p>
+                </div>
+            </div>
+
+            <!-- Student Leave History - HIDDEN INITIALLY -->
+            <div class="content-section" id="studentHistorySection" style="display: none; margin-bottom: 2rem;">
+                <h3>Student Leave History</h3>
+                <table class="applications-table">
+                    <thead>
+                        <tr>
+                            <th>Application ID</th>
+                            <th>Leave Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Days</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentHistoryTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align:center; color:#777;">Enter a Student ID and click "View Summary"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Teacher Stats Grid - HIDDEN INITIALLY -->
+            <div class="stats-grid summary-stats" id="teacherStatsGrid" style="display: none; margin-bottom: 2rem;">
+                <div class="stat-card">
+                    <h3>Total Leaves (Semester)</h3>
+                    <p class="stat-number" id="teacherTotalLeaves">0</p>
+                </div>
+                <div class="stat-card approved">
+                    <h3>Approved</h3>
+                    <p class="stat-number" id="teacherApprovedLeaves">0</p>
+                </div>
+                <div class="stat-card pending">
+                    <h3>Pending</h3>
+                    <p class="stat-number" id="teacherPendingLeaves">0</p>
+                </div>
+                <div class="stat-card rejected">
+                    <h3>Rejected</h3>
+                    <p class="stat-number" id="teacherRejectedLeaves">0</p>
+                </div>
+            </div>
+
+            <!-- Teacher Leave History - HIDDEN INITIALLY -->
+            <div class="content-section" id="teacherHistorySection" style="display: none;">
+                <h3>Teacher Leave History</h3>
+                <table class="applications-table">
+                    <thead>
+                        <tr>
+                            <th>Application ID</th>
+                            <th>Leave Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Days</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teacherHistoryTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align:center; color:#777;">Enter a Teacher ID and click "View Summary"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Active navigation highlighting
+    const currentPage = window.location.pathname.split('/').pop();
+    const navLinks = document.querySelectorAll('.nav-item');
+    
+    navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active-nav');
+        }
+    });
+
+    // Profile dropdown functionality
+    const profileIcon = document.getElementById('profileIcon');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileForm = document.getElementById('profileForm');
+    const changePasswordForm = document.getElementById('changePasswordForm');
+
+    profileIcon.addEventListener('click', () => {
+        if (profileDropdown.style.display === 'none' || profileDropdown.style.display === '') {
+            profileDropdown.style.display = 'block';
+            profileForm.fullName.value = localStorage.getItem('hodFullName') || 'HOD Name';
+            profileForm.department.value = localStorage.getItem('hodDepartment') || 'Computer Science';
+            profileForm.userId.value = localStorage.getItem('hodUserId') || 'HOD001';
+        } else {
+            profileDropdown.style.display = 'none';
+        }
+    });
+
+    profileForm.addEventListener('submit', e => {
+        e.preventDefault();
+        localStorage.setItem('hodFullName', profileForm.fullName.value);
+        alert('Profile updated successfully!');
+        profileDropdown.style.display = 'none';
+    });
+
+    changePasswordForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const currentPass = changePasswordForm.currentPassword.value;
+        const newPass = changePasswordForm.newPassword.value;
+        const confirmPass = changePasswordForm.confirmPassword.value;
+        
+        if (newPass !== confirmPass) {
+            alert('New passwords do not match!');
+            return;
+        }
+        alert('Password changed successfully!');
+        changePasswordForm.reset();
+        profileDropdown.style.display = 'none';
+    });
+
+    // Populate HOD info from localStorage
+    const hodDepartment = localStorage.getItem('hodDepartment') || 'Computer Science';
+    const hodUserId = localStorage.getItem('hodUserId') || 'H';
+    document.getElementById('profileName').textContent = 'HOD - ' + hodDepartment;
+    document.getElementById('profileIcon').textContent = hodUserId.charAt(0).toUpperCase();
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', e => {
+        localStorage.clear();
+    });
+
+    // ===== STUDENT DATA =====
+    const studentLeaveData = {
+        '2402300100011': {
+            name: 'Abhinav',
+            totalLeaves: 4,
+            approved: 2,
+            pending: 1,
+            rejected: 1,
+            history: [
+                { id: '#LA101', type: 'Sick Leave', start: '2025-11-20', end: '2025-11-21', days: 2, status: 'approved' },
+                { id: '#LA102', type: 'Casual Leave', start: '2025-11-10', end: '2025-11-10', days: 1, status: 'pending' },
+                { id: '#LA103', type: 'Emergency Leave', start: '2025-10-15', end: '2025-10-15', days: 1, status: 'approved' },
+                { id: '#LA104', type: 'Sick Leave', start: '2025-10-01', end: '2025-10-02', days: 2, status: 'rejected' }
+            ]
+        },
+        '2402300100005': {
+            name: 'Aanya',
+            totalLeaves: 3,
+            approved: 2,
+            pending: 1,
+            rejected: 0,
+            history: [
+                { id: '#LA201', type: 'Casual Leave', start: '2025-11-15', end: '2025-11-16', days: 2, status: 'pending' },
+                { id: '#LA202', type: 'Sick Leave', start: '2025-10-10', end: '2025-10-11', days: 2, status: 'approved' },
+                { id: '#LA203', type: 'Emergency Leave', start: '2025-09-20', end: '2025-09-20', days: 1, status: 'approved' }
+            ]
+        },
+        '2402300100012': {
+            name: 'Abhishek',
+            totalLeaves: 6,
+            approved: 4,
+            pending: 0,
+            rejected: 2,
+            history: [
+                { id: '#LA301', type: 'Casual Leave', start: '2025-11-25', end: '2025-11-26', days: 2, status: 'approved' },
+                { id: '#LA302', type: 'Sick Leave', start: '2025-11-05', end: '2025-11-06', days: 2, status: 'approved' },
+                { id: '#LA303', type: 'Emergency Leave', start: '2025-10-12', end: '2025-10-12', days: 1, status: 'approved' },
+                { id: '#LA304', type: 'Sick Leave', start: '2025-09-18', end: '2025-09-19', days: 2, status: 'rejected' },
+                { id: '#LA305', type: 'Casual Leave', start: '2025-09-01', end: '2025-09-02', days: 2, status: 'approved' },
+                { id: '#LA306', type: 'Emergency Leave', start: '2025-08-10', end: '2025-08-10', days: 1, status: 'rejected' }
+            ]
+        },
+        '2402300100013': {
+            name: 'Abhitenjay',
+            totalLeaves: 3,
+            approved: 3,
+            pending: 0,
+            rejected: 0,
+            history: [
+                { id: '#LA401', type: 'Sick Leave', start: '2025-11-15', end: '2025-11-16', days: 2, status: 'approved' },
+                { id: '#LA402', type: 'Casual Leave', start: '2025-10-20', end: '2025-10-20', days: 1, status: 'approved' },
+                { id: '#LA403', type: 'Emergency Leave', start: '2025-09-25', end: '2025-09-25', days: 1, status: 'approved' }
+            ]
+        }
+    };
+
+    // ===== TEACHER DATA ===== (✅ UPDATED NAMES)
+    const teacherLeaveData = {
+        'FAC2020001': {
+            name: 'Dr. Kaustubh Shukla',
+            totalLeaves: 5,
+            approved: 4,
+            pending: 0,
+            rejected: 1,
+            history: [
+                { id: '#FLA101', type: 'Medical Leave', start: '2025-11-18', end: '2025-11-20', days: 3, status: 'approved' },
+                { id: '#FLA102', type: 'Casual Leave', start: '2025-10-10', end: '2025-10-10', days: 1, status: 'approved' },
+                { id: '#FLA103', type: 'Personal Leave', start: '2025-09-15', end: '2025-09-15', days: 1, status: 'approved' },
+                { id: '#FLA104', type: 'Sick Leave', start: '2025-08-20', end: '2025-08-21', days: 2, status: 'rejected' },
+                { id: '#FLA105', type: 'Casual Leave', start: '2025-07-12', end: '2025-07-12', days: 1, status: 'approved' }
+            ]
+        },
+        'FAC2020002': {
+            name: 'Prof. Vaishali Mogha',
+            totalLeaves: 3,
+            approved: 2,
+            pending: 1,
+            rejected: 0,
+            history: [
+                { id: '#FLA201', type: 'Maternity Leave', start: '2025-11-01', end: '2025-11-30', days: 30, status: 'approved' },
+                { id: '#FLA202', type: 'Casual Leave', start: '2025-10-05', end: '2025-10-06', days: 2, status: 'pending' },
+                { id: '#FLA203', type: 'Emergency Leave', start: '2025-09-12', end: '2025-09-12', days: 1, status: 'approved' }
+            ]
+        }
+    };
+
+    // ===== STUDENT SUMMARY FUNCTIONALITY =====
+    const viewStudentSummaryBtn = document.getElementById('viewStudentSummaryBtn');
+    const summaryStudentId = document.getElementById('summaryStudentId');
+    const summaryTeacherId = document.getElementById('summaryTeacherId');
+    const studentStatsGrid = document.getElementById('studentStatsGrid');
+    const studentHistorySection = document.getElementById('studentHistorySection');
+    const studentTotalLeaves = document.getElementById('studentTotalLeaves');
+    const studentApprovedLeaves = document.getElementById('studentApprovedLeaves');
+    const studentPendingLeaves = document.getElementById('studentPendingLeaves');
+    const studentRejectedLeaves = document.getElementById('studentRejectedLeaves');
+    const studentHistoryTableBody = document.getElementById('studentHistoryTableBody');
+
+    viewStudentSummaryBtn.addEventListener('click', () => {
+        const studentId = summaryStudentId.value.trim();
+
+        if (!studentId) {
+            alert('Please enter a Student ID');
+            return;
+        }
+
+        const data = studentLeaveData[studentId];
+
+        if (!data) {
+            alert('Student ID not found. Try: 2402300100011, 2402300100005, 2402300100012, 2402300100013');
+            return;
+        }
+
+        // CLEAR TEACHER SEARCH BAR
+        summaryTeacherId.value = '';
+
+        // Hide teacher sections
+        document.getElementById('teacherStatsGrid').style.display = 'none';
+        document.getElementById('teacherHistorySection').style.display = 'none';
+
+        // Show student sections
+        studentStatsGrid.style.display = 'grid';
+        studentHistorySection.style.display = 'block';
+
+        // Update stats
+        studentTotalLeaves.textContent = data.totalLeaves;
+        studentApprovedLeaves.textContent = data.approved;
+        studentPendingLeaves.textContent = data.pending;
+        studentRejectedLeaves.textContent = data.rejected;
+
+        // Update table
+        studentHistoryTableBody.innerHTML = '';
+        data.history.forEach(record => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${record.id}</td>
+                <td>${record.type}</td>
+                <td>${record.start}</td>
+                <td>${record.end}</td>
+                <td>${record.days}</td>
+                <td><span class="status-badge ${record.status}">${record.status.charAt(0).toUpperCase() + record.status.slice(1)}</span></td>
+            `;
+            studentHistoryTableBody.appendChild(tr);
+        });
+
+        // Scroll to results
+        studentStatsGrid.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // ===== TEACHER SUMMARY FUNCTIONALITY =====
+    const viewTeacherSummaryBtn = document.getElementById('viewTeacherSummaryBtn');
+    const teacherStatsGrid = document.getElementById('teacherStatsGrid');
+    const teacherHistorySection = document.getElementById('teacherHistorySection');
+    const teacherTotalLeaves = document.getElementById('teacherTotalLeaves');
+    const teacherApprovedLeaves = document.getElementById('teacherApprovedLeaves');
+    const teacherPendingLeaves = document.getElementById('teacherPendingLeaves');
+    const teacherRejectedLeaves = document.getElementById('teacherRejectedLeaves');
+    const teacherHistoryTableBody = document.getElementById('teacherHistoryTableBody');
+
+    viewTeacherSummaryBtn.addEventListener('click', () => {
+        const teacherId = summaryTeacherId.value.trim();
+
+        if (!teacherId) {
+            alert('Please enter a Teacher ID');
+            return;
+        }
+
+        const data = teacherLeaveData[teacherId];
+
+        if (!data) {
+            alert('Teacher ID not found. Try: FAC2020001, FAC2020002');
+            return;
+        }
+
+        // CLEAR STUDENT SEARCH BAR
+        summaryStudentId.value = '';
+
+        // Hide student sections
+        studentStatsGrid.style.display = 'none';
+        studentHistorySection.style.display = 'none';
+
+        // Show teacher sections
+        teacherStatsGrid.style.display = 'grid';
+        teacherHistorySection.style.display = 'block';
+
+        // Update stats
+        teacherTotalLeaves.textContent = data.totalLeaves;
+        teacherApprovedLeaves.textContent = data.approved;
+        teacherPendingLeaves.textContent = data.pending;
+        teacherRejectedLeaves.textContent = data.rejected;
+
+        // Update table
+        teacherHistoryTableBody.innerHTML = '';
+        data.history.forEach(record => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${record.id}</td>
+                <td>${record.type}</td>
+                <td>${record.start}</td>
+                <td>${record.end}</td>
+                <td>${record.days}</td>
+                <td><span class="status-badge ${record.status}">${record.status.charAt(0).toUpperCase() + record.status.slice(1)}</span></td>
+            `;
+            teacherHistoryTableBody.appendChild(tr);
+        });
+
+        // Scroll to results
+        teacherStatsGrid.scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>
