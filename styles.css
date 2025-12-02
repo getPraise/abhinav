@@ -11,7 +11,7 @@ body {
     color: #312e2e; /* dark text for visibility */
 }
 
-/* ===== LOGIN PAGE STYLES ===== */
+/* _____LOGIN PAGE STYLES________ */
 .login-body {
     display: flex;
     justify-content: center;
@@ -111,7 +111,7 @@ body {
     text-decoration: underline;
 }
 
-/* ===== DASHBOARD COMMON STYLES ===== */
+/* _______DASHBOARD COMMON STYLES ________ */
 .dashboard-container {
     display: flex;
     min-height: 100vh;
@@ -223,7 +223,7 @@ body {
     cursor: pointer;
 }
 
-/* PROFILE DROPDOWN - FIXED FOR VERTICAL DISPLAY */
+/* Profile Dropdown-For Vertical Display */
 .profile-dropdown {
     position: absolute;
     top: 60px;
@@ -452,7 +452,7 @@ body {
     color: #750606;
 }
 
-/* ===== HOD DASHBOARD SPECIFIC STYLES ===== */
+/*______ HOD DASHBOARD SPECIFIC STYLES _______ */
 .request-cards {
     display: flex;
     flex-direction: column;
@@ -591,6 +591,121 @@ body {
     color: #168a6b;
 }
 
+/* ===== SIDE-BY-SIDE TABLES STYLES (HOD Dashboard) ===== */
+.tables-container {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.table-section {
+    flex: 1;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.table-header h3 {
+    margin: 0;
+    color: #312e2e;
+    font-size: 1.2rem;
+}
+
+.table-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.search-input {
+    padding: 0.6rem 1rem;
+    border: 2px solid #fca339;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    min-width: 200px;
+    background: white;
+    color: #312e2e;
+}
+
+.search-input:focus {
+    border-color: #f03f3f;
+}
+
+.filter-select {
+    padding: 0.6rem 1rem;
+    border: 2px solid #fca339;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    background-color: white;
+    color: #312e2e;
+}
+
+.scrollable-table-wrapper {
+    max-height: 400px;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+
+.scrollable-table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.scrollable-table-wrapper thead {
+    position: sticky;
+    top: 0;
+    background: #fff2e5;
+    z-index: 10;
+}
+
+.scrollable-table-wrapper th {
+    padding: 0.8rem;
+    text-align: left;
+    font-weight: 600;
+    color: #6e6966;
+    border-bottom: 2px solid #f7b28e;
+}
+
+.scrollable-table-wrapper td {
+    padding: 0.8rem;
+    border-bottom: 1px solid #ffdecc;
+    font-size: 14px;
+    color: #312e2e;
+}
+
+.scrollable-table-wrapper tbody tr:hover {
+    background-color: #fff2e5;
+}
+
+/* Custom scrollbar for tables */
+.scrollable-table-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollable-table-wrapper::-webkit-scrollbar-track {
+    background: #f9d3c5aa;
+    border-radius: 4px;
+}
+
+.scrollable-table-wrapper::-webkit-scrollbar-thumb {
+    background: #fca339;
+    border-radius: 4px;
+}
+
+.scrollable-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #f03f3f;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     .stats-grid,
@@ -599,6 +714,10 @@ body {
     }
     
     .leave-form .form-row {
-        grid-template-columns: 1fr;
-    }
+        grid-template-columns: 1fr;
+    }
+    
+    .tables-container {
+        flex-direction: column;
+    }
 }
