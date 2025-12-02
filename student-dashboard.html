@@ -5,10 +5,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Student Dashboard - Attendify</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .search-container {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #fff2e5;
+      border-radius: 8px;
+      border: 2px solid #fca339;
+    }
+    
+    .search-container h3 {
+      margin: 0 0 10px 0;
+      color: #312e2e;
+      font-size: 16px;
+    }
+    
+    #dateSearch {
+      width: 100%;
+      max-width: 300px;
+      padding: 12px 15px;
+      border: 2px solid #fca339;
+      border-radius: 6px;
+      font-size: 14px;
+      background: white;
+      color: #312e2e;
+    }
+    
+    #dateSearch:focus {
+      outline: none;
+      border-color: #f03f3f;
+    }
+    
+    #searchClear {
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #fca339 0%, #f03f3f 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: transform 0.2s;
+    }
+    
+    #searchClear:hover {
+      transform: translateY(-2px);
+    }
+    
+    #formError {
+      padding: 12px 15px;
+      border-radius: 6px;
+      background: #f8f9fa;
+      border-left: 4px solid #dc3545;
+      margin-bottom: 15px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .no-results {
+      text-align: center;
+      color: #6e6966;
+      padding: 30px;
+      font-style: italic;
+    }
+
+    .content-section, .stats-grid {
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div class="dashboard-container">
-    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
         <h2>Attendify</h2>
@@ -17,17 +86,14 @@
       <nav class="sidebar-nav">
         <a class="nav-item active-nav" href="#" id="dashboardNav">Dashboard</a>
         <a class="nav-item" href="#" id="applyLeaveBtn">Apply Leave</a>
-        <a class="nav-item" href="#" id="myApplicationsNav">My Applications</a>
-        <!-- <a class="nav-item" href="#" id="settingsNav">Settings</a> -->
+        <a class="nav-item" href="#" id="analyticsNav">📊 Analytics</a>
         <a class="nav-item logout" href="login.html" id="logoutBtn">Logout</a>
       </nav>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
-      <!-- Header -->
       <header class="dashboard-header" style="position: relative;">
-        <h1 id="welcomeMessage">Welcome, Student Name</h1>
+        <h1 id="welcomeMessage">Welcome, Student</h1>
         <div class="user-profile" style="position: relative; cursor: pointer;">
           <span id="profileName">Student Profile</span>
           <div class="profile-icon" id="profileIcon">S</div>
@@ -36,8 +102,8 @@
               <h3>Profile Information</h3>
               <label for="fullName">Full Name</label>
               <input type="text" id="fullName" name="fullName" required />
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" required />
+              <label for="studentId">Student ID</label>
+              <input type="text" id="studentId" name="studentId" disabled />
               <label for="department">Department</label>
               <input type="text" id="department" name="department" disabled />
               <label for="year">Year</label>
@@ -59,30 +125,54 @@
         </div>
       </header>
 
-      <!-- Dashboard Stats Section -->
-      <div class="stats-grid" id="dashboardSection">
+      <div class="stats-grid" id="dashboardStatsSection">
         <div class="stat-card">
           <h3>Total Applications</h3>
-          <p class="stat-number" id="totalApplications">12</p>
+          <p class="stat-number" id="totalApplications">0</p>
         </div>
         <div class="stat-card approved">
           <h3>Approved</h3>
-          <p class="stat-number" id="approvedApplications">8</p>
+          <p class="stat-number" id="approvedApplications">0</p>
         </div>
         <div class="stat-card pending">
           <h3>Pending</h3>
-          <p class="stat-number" id="pendingApplications">3</p>
+          <p class="stat-number" id="pendingApplications">0</p>
         </div>
         <div class="stat-card rejected">
           <h3>Rejected</h3>
-          <p class="stat-number" id="rejectedApplications">1</p>
+          <p class="stat-number" id="rejectedApplications">0</p>
         </div>
       </div>
 
-      <!-- Apply Leave Section -->
+      <div class="content-section" id="dashboardSection">
+        <h2>My Applications</h2>
+        
+        <div class="search-container">
+          <h3>🔍 Search by Date</h3>
+          <input type="date" id="dateSearch" placeholder="Select date to search..." />
+          <button id="searchClear" style="display: none;">Clear Search</button>
+        </div>
+        
+        <table class="applications-table">
+          <thead>
+            <tr>
+              <th>Application Number</th>
+              <th>Leave Type</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="applicationsTableBody">
+          </tbody>
+        </table>
+      </div>
+
       <div class="content-section" id="applyLeaveSection">
         <h2>Apply for Leave</h2>
         <form class="leave-form" id="leaveForm">
+          <div id="formError" style="display: none;"></div>
+          
           <div class="form-row">
             <div class="form-group">
               <label for="departmentSelect">Department</label>
@@ -106,6 +196,7 @@
               </select>
             </div>
           </div>
+          
           <div class="form-row">
             <div class="form-group">
               <label for="rollNumber">Roll Number</label>
@@ -121,6 +212,7 @@
               </select>
             </div>
           </div>
+          
           <div class="form-row">
             <div class="form-group">
               <label for="startDate">Start Date</label>
@@ -131,74 +223,92 @@
               <input type="date" id="endDate" required />
             </div>
           </div>
+          
           <div class="form-row">
             <div class="form-group">
               <label for="document">Upload Document</label>
               <input type="file" id="document" />
             </div>
           </div>
+          
           <div class="form-group">
             <label for="reason">Reason</label>
             <textarea id="reason" rows="4" placeholder="Enter reason for leave" required></textarea>
           </div>
+          
           <button type="submit" class="submit-btn">Submit Application</button>
         </form>
       </div>
 
-      <!-- Recent Applications Section -->
-      <div class="content-section" id="applicationsSection">
-        <h2>Recent Applications</h2>
-        <table class="applications-table">
-          <thead>
-            <tr>
-              <th>Application ID</th>
-              <th>Leave Type</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="applicationsTableBody">
-            <tr>
-              <td>#LA001</td>
-              <td>Sick Leave</td>
-              <td>2025-11-10</td>
-              <td>2025-11-12</td>
-              <td><span class="status-badge pending">Pending</span></td>
-            </tr>
-            <tr>
-              <td>#LA002</td>
-              <td>Casual Leave</td>
-              <td>2025-11-01</td>
-              <td>2025-11-02</td>
-              <td><span class="status-badge approved">Approved</span></td>
-            </tr>
-            <tr>
-              <td>#LA003</td>
-              <td>Emergency Leave</td>
-              <td>2025-10-25</td>
-              <td>2025-10-26</td>
-              <td><span class="status-badge rejected">Rejected</span></td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="content-section" id="analyticsSection">
+        <h2>📊 Leave Analytics</h2>
+        
+        <div class="stats-grid" style="display: grid; margin-bottom: 30px;">
+          <div class="stat-card approved">
+            <h3>This Month</h3>
+            <p class="stat-number" id="monthTotal">0</p>
+          </div>
+          <div class="stat-card pending">
+            <h3>Last Month</h3>
+            <p class="stat-number" id="lastMonthTotal">0</p>
+          </div>
+          <div class="stat-card">
+            <h3>Average Duration</h3>
+            <p class="stat-number" id="avgDuration">0 days</p>
+          </div>
+          <div class="stat-card rejected">
+            <h3>Approval Rate</h3>
+            <p class="stat-number" id="approvalRate">0%</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+          <div style="background: #fff2e5; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px #f9d3c5aa;">
+            <h3 style="margin-bottom: 15px; color: #312e2e;">Leave Types Breakdown</h3>
+            <div id="leaveTypeChart" style="min-height: 200px; display: flex; align-items: center; justify-content: center; color: #6e6966;">
+              Loading data...
+            </div>
+          </div>
+          <div style="background: #fff2e5; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px #f9d3c5aa;">
+            <h3 style="margin-bottom: 15px; color: #312e2e;">Status Distribution</h3>
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 30px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="status-badge approved" style="flex: 1; text-align: center; padding: 10px;">Approved</span>
+                <span style="font-size: 24px; font-weight: bold; margin-left: 15px; color: #312e2e;" id="statusApproved">0</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="status-badge pending" style="flex: 1; text-align: center; padding: 10px;">Pending</span>
+                <span style="font-size: 24px; font-weight: bold; margin-left: 15px; color: #312e2e;" id="statusPending">0</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="status-badge rejected" style="flex: 1; text-align: center; padding: 10px;">Rejected</span>
+                <span style="font-size: 24px; font-weight: bold; margin-left: 15px; color: #312e2e;" id="statusRejected">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   </div>
 
   <script>
-    // Sidebar navigation elements
     const dashboardNav = document.getElementById('dashboardNav');
     const applyLeaveBtn = document.getElementById('applyLeaveBtn');
-    const myApplicationsNav = document.getElementById('myApplicationsNav');
+    const analyticsNav = document.getElementById('analyticsNav');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // Section elements for scrolling
+    const dashboardStatsSection = document.getElementById('dashboardStatsSection');
     const dashboardSection = document.getElementById('dashboardSection');
     const applyLeaveSection = document.getElementById('applyLeaveSection');
-    const applicationsSection = document.getElementById('applicationsSection');
+    const analyticsSection = document.getElementById('analyticsSection');
 
-    // Function to set active class on sidebar nav items
+    function hideAllSections() {
+      dashboardStatsSection.style.display = 'none';
+      dashboardSection.style.display = 'none';
+      applyLeaveSection.style.display = 'none';
+      analyticsSection.style.display = 'none';
+    }
+
     function setActiveNav(activeItem) {
       document.querySelectorAll('.sidebar-nav .nav-item').forEach(nav => {
         nav.classList.remove('active-nav');
@@ -206,33 +316,29 @@
       activeItem.classList.add('active-nav');
     }
 
-    // Dashboard: scroll to stats and highlight button
     dashboardNav.addEventListener('click', e => {
       e.preventDefault();
-      dashboardSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      hideAllSections();
+      dashboardStatsSection.style.display = 'grid';
+      dashboardSection.style.display = 'block';
       setActiveNav(dashboardNav);
     });
 
-    // Apply Leave: scroll to form and highlight button
     applyLeaveBtn.addEventListener('click', e => {
       e.preventDefault();
-      applyLeaveSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      applyLeaveSection.style.transition = 'background-color 0.5s ease';
-      applyLeaveSection.style.backgroundColor = '#fff9e6';
-      setTimeout(() => {
-        applyLeaveSection.style.backgroundColor = '';
-      }, 1500);
+      hideAllSections();
+      applyLeaveSection.style.display = 'block';
       setActiveNav(applyLeaveBtn);
     });
 
-    // My Applications: scroll to applications table and highlight button
-    myApplicationsNav.addEventListener('click', e => {
+    analyticsNav.addEventListener('click', e => {
       e.preventDefault();
-      applicationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setActiveNav(myApplicationsNav);
+      hideAllSections();
+      analyticsSection.style.display = 'block';
+      loadAnalytics();
+      setActiveNav(analyticsNav);
     });
 
-    // Profile dropdown
     const profileIcon = document.getElementById('profileIcon');
     const profileDropdown = document.getElementById('profileDropdown');
     const profileForm = document.getElementById('profileForm');
@@ -241,8 +347,8 @@
     profileIcon.addEventListener('click', () => {
       if (profileDropdown.style.display === 'none' || profileDropdown.style.display === '') {
         profileDropdown.style.display = 'block';
-        profileForm.fullName.value = localStorage.getItem('fullName') || 'Student Name';
-        profileForm.email.value = localStorage.getItem('email') || 'student@example.com';
+        profileForm.fullName.value = localStorage.getItem('userName') || 'Student Name';
+        profileForm.studentId.value = localStorage.getItem('userId') || 'STU001';
         profileForm.department.value = localStorage.getItem('department') || 'CSE';
         profileForm.year.value = localStorage.getItem('year') || '3';
       } else {
@@ -252,36 +358,244 @@
 
     profileForm.addEventListener('submit', e => {
       e.preventDefault();
-      localStorage.setItem('fullName', profileForm.fullName.value);
-      localStorage.setItem('email', profileForm.email.value);
-      alert('Profile updated (mock)');
+      const newName = profileForm.fullName.value;
+      localStorage.setItem('userName', newName);
+      
+      document.getElementById('welcomeMessage').textContent = 'Welcome, ' + newName;
+      document.getElementById('profileName').textContent = newName;
+      document.getElementById('profileIcon').textContent = newName.charAt(0).toUpperCase();
+      
+      alert('Profile updated successfully!');
       profileDropdown.style.display = 'none';
     });
 
     changePasswordForm.addEventListener('submit', e => {
       e.preventDefault();
-      const currentPass = changePasswordForm.currentPassword.value;
       const newPass = changePasswordForm.newPassword.value;
       const confirmPass = changePasswordForm.confirmPassword.value;
       if (newPass !== confirmPass) {
         alert('New passwords do not match!');
         return;
       }
-      alert('Password changed successfully (mock)');
+      alert('Password changed successfully!');
       changePasswordForm.reset();
       profileDropdown.style.display = 'none';
     });
 
-    // FIXED: Get userName from localStorage (was 'fullName' before)
     const userName = localStorage.getItem('userName') || 'Student Name';
     document.getElementById('welcomeMessage').textContent = 'Welcome, ' + userName;
     document.getElementById('profileName').textContent = userName;
     document.getElementById('profileIcon').textContent = userName.charAt(0).toUpperCase();
 
-    // Logout
     logoutBtn.addEventListener('click', e => {
       localStorage.clear();
+      window.location.href = 'login.html';
     });
+
+    let allStudentApplications = [];
+
+    function initializeStudentApplications() {
+      allStudentApplications = JSON.parse(localStorage.getItem('studentApplications') || '[]');
+      
+      if (allStudentApplications.length === 0) {
+        const defaultApps = [
+          {id: '#LA001', leaveType: 'Sick Leave', startDate: '2025-11-10', endDate: '2025-11-12', status: 'pending'},
+          {id: '#LA002', leaveType: 'Casual Leave', startDate: '2025-11-01', endDate: '2025-11-02', status: 'approved'},
+          {id: '#LA003', leaveType: 'Emergency Leave', startDate: '2025-10-25', endDate: '2025-10-26', status: 'rejected'}
+        ];
+        allStudentApplications = defaultApps;
+        localStorage.setItem('studentApplications', JSON.stringify(defaultApps));
+      }
+      
+      loadApplicationsTable('');
+      updateStats();
+    }
+
+    function loadApplicationsTable(searchDate) {
+      const tableBody = document.getElementById('applicationsTableBody');
+      tableBody.innerHTML = '';
+      
+      let filteredApps = allStudentApplications;
+      
+      if (searchDate) {
+        filteredApps = allStudentApplications.filter(app => 
+          app.startDate === searchDate || app.endDate === searchDate
+        );
+      }
+      
+      const displayApps = filteredApps.slice(-10).reverse();
+      
+      if (displayApps.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5" class="no-results">No applications found</td></tr>';
+        return;
+      }
+      
+      displayApps.forEach(app => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${app.id}</td>
+          <td>${app.leaveType}</td>
+          <td>${app.startDate}</td>
+          <td>${app.endDate}</td>
+          <td><span class="status-badge ${app.status}">${app.status.charAt(0).toUpperCase() + app.status.slice(1)}</span></td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    function updateStats() {
+      document.getElementById('totalApplications').textContent = allStudentApplications.length;
+      document.getElementById('approvedApplications').textContent = allStudentApplications.filter(a => a.status === 'approved').length;
+      document.getElementById('pendingApplications').textContent = allStudentApplications.filter(a => a.status === 'pending').length;
+      document.getElementById('rejectedApplications').textContent = allStudentApplications.filter(a => a.status === 'rejected').length;
+    }
+
+    const leaveForm = document.getElementById('leaveForm');
+    const submitBtn = leaveForm.querySelector('button[type="submit"]');
+    const formError = document.getElementById('formError');
+
+    leaveForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const formData = {
+        id: #LA${String(allStudentApplications.length + 1).padStart(3, '0')},
+        leaveType: document.getElementById('leaveType').options[document.getElementById('leaveType').selectedIndex].text,
+        startDate: document.getElementById('startDate').value,
+        endDate: document.getElementById('endDate').value,
+        status: 'pending',
+        rollNumber: document.getElementById('rollNumber').value,
+        department: document.getElementById('departmentSelect').options[document.getElementById('departmentSelect').selectedIndex].text,
+        year: document.getElementById('yearSelect').options[document.getElementById('yearSelect').selectedIndex].text,
+        reason: document.getElementById('reason').value
+      };
+      
+      const startDate = new Date(formData.startDate);
+      const endDate = new Date(formData.endDate);
+      
+      if (startDate > endDate) {
+        formError.textContent = '❌ Start date must be before or same as end date';
+        formError.style.borderLeftColor = '#dc3545';
+        formError.style.display = 'block';
+        return;
+      }
+      
+      formError.style.display = 'none';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+      
+      setTimeout(() => {
+        allStudentApplications.push(formData);
+        localStorage.setItem('studentApplications', JSON.stringify(allStudentApplications));
+        
+        leaveForm.reset();
+        
+        loadApplicationsTable(document.getElementById('dateSearch').value);
+        updateStats();
+        
+        formError.textContent = '✅ Leave application submitted successfully!';
+        formError.style.borderLeftColor = '#28a745';
+        formError.style.display = 'block';
+        
+        setTimeout(() => {
+          formError.style.display = 'none';
+          hideAllSections();
+          dashboardStatsSection.style.display = 'grid';
+          dashboardSection.style.display = 'block';
+          setActiveNav(dashboardNav);
+        }, 2000);
+        
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Application';
+        
+      }, 1500);
+    });
+
+    const dateSearch = document.getElementById('dateSearch');
+    const searchClear = document.getElementById('searchClear');
+
+    dateSearch.addEventListener('change', () => {
+      loadApplicationsTable(dateSearch.value);
+      searchClear.style.display = dateSearch.value ? 'block' : 'none';
+    });
+
+    searchClear.addEventListener('click', () => {
+      dateSearch.value = '';
+      loadApplicationsTable('');
+      searchClear.style.display = 'none';
+    });
+
+    function loadAnalytics() {
+      const apps = allStudentApplications;
+      
+      if (apps.length === 0) {
+        document.getElementById('leaveTypeChart').innerHTML = '<div style="text-align: center; color: #6e6966;">No data available yet</div>';
+        return;
+      }
+      
+      const now = new Date();
+      const thisMonth = apps.filter(app => {
+        const appDate = new Date(app.startDate);
+        return appDate.getMonth() === now.getMonth() && appDate.getFullYear() === now.getFullYear();
+      });
+      document.getElementById('monthTotal').textContent = thisMonth.length;
+      
+      const lastMonth = apps.filter(app => {
+        const appDate = new Date(app.startDate);
+        const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1);
+        return appDate.getMonth() === lastMonthDate.getMonth() && appDate.getFullYear() === lastMonthDate.getFullYear();
+      });
+      document.getElementById('lastMonthTotal').textContent = lastMonth.length;
+      
+      let totalDays = 0;
+      apps.forEach(app => {
+        const start = new Date(app.startDate);
+        const end = new Date(app.endDate);
+        const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+        totalDays += days;
+      });
+      const avgDays = apps.length > 0 ? (totalDays / apps.length).toFixed(1) : 0;
+      document.getElementById('avgDuration').textContent = avgDays + ' days';
+      
+      const approved = apps.filter(a => a.status === 'approved').length;
+      const rate = apps.length > 0 ? Math.round((approved / apps.length) * 100) : 0;
+      document.getElementById('approvalRate').textContent = rate + '%';
+      
+      document.getElementById('statusApproved').textContent = approved;
+      document.getElementById('statusPending').textContent = apps.filter(a => a.status === 'pending').length;
+      document.getElementById('statusRejected').textContent = apps.filter(a => a.status === 'rejected').length;
+      
+      const leaveTypes = {};
+      apps.forEach(app => {
+        leaveTypes[app.leaveType] = (leaveTypes[app.leaveType] || 0) + 1;
+      });
+      
+      let chartHTML = '<div style="text-align: center; padding: 20px;">';
+      chartHTML += '<div style="font-size: 36px; font-weight: bold; color: #312e2e; margin-bottom: 10px;">' + apps.length + '</div>';
+      chartHTML += '<div style="font-size: 14px; color: #6e6966; margin-bottom: 20px;">Total Leave Applications</div>';
+      chartHTML += '<div style="margin-top: 20px;">';
+      
+      Object.entries(leaveTypes).forEach(([type, count]) => {
+        const percentage = Math.round((count / apps.length) * 100);
+        chartHTML += `
+          <div style="margin: 10px 0; text-align: left;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <span style="font-size: 14px; color: #312e2e; font-weight: 500;">${type}</span>
+              <span style="font-size: 14px; color: #6e6966;">${count} (${percentage}%)</span>
+            </div>
+            <div style="background: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden;">
+              <div style="background: linear-gradient(135deg, #fca339 0%, #f03f3f 100%); width: ${percentage}%; height: 100%;"></div>
+            </div>
+          </div>
+        `;
+      });
+      
+      chartHTML += '</div></div>';
+      document.getElementById('leaveTypeChart').innerHTML = chartHTML;
+    }
+
+    initializeStudentApplications();
+    dashboardStatsSection.style.display = 'grid';
+    dashboardSection.style.display = 'block';
   </script>
 </body>
 </html>
